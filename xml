@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+    <html>
+<xsl:variable name="doc" select="document('db.xml')"/>
+    <head><title>card db</title>
+	<style>
+	body {background-color:#FFF;}
+	div {
+	background-color:#D0E4FE;
+	border-style:outset;
+	float:right;
+	margin: 5px;
+	}
+	* {text-align: center;}
+	div.white {background-color:#FFF;}
+	div.red {background-color:#F00;}
+	div.green {background-color:#0F0;}
+	div.cost {clear: left;
+			  clear:right;
+			  float: right;}
+	</style>
+	</head>
+    <body>
+				
+    <xsl:for-each select="$doc//card">
+		<div><h1>card</h1>
+		<xsl:for-each select=".//effect"> 
+		<div>
+		<h2><xsl:value-of select="./type"/></h2>
+		<xsl:if test="contains(.,'spawn')">
+			a army of 
+			<xsl:value-of select="./size"/>
+			at
+		<xsl:apply-templates select="./dpos"/>
+		</xsl:if>
+		<xsl:if test="contains(.,'move')">
+			moves everyone <xsl:apply-templates select="./dpos"/>
+			</xsl:if>
+		</div>
+		</xsl:for-each>
+		<xsl:apply-templates select="./cost"/>
+		</div>
+		
+     </xsl:for-each>
+    </body>
+    </html>
+</xsl:template>
+<xsl:template match="dpos">
+	<xsl:value-of select="."/>
+</xsl:template>
+<xsl:template match="cost">
+	<div>
+	<h2>cost</h2>
+	<xsl:attribute name="class">cost</xsl:attribute>
+	<xsl:for-each select="./*">	
+	
+	
+	<xsl:element name="div">
+		<xsl:attribute name="class"><xsl:value-of select="name(.)"/></xsl:attribute><xsl:value-of select="."/>
+	</xsl:element>
+	
+	</xsl:for-each>
+	</div>
+</xsl:template>
+</xsl:transform>
